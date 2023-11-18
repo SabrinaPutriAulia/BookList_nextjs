@@ -1,31 +1,10 @@
 import { useAuth } from "@/modules/context/authContext";
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  HStack,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
-import Cookies from "js-cookie";
+import { Button, Flex, HStack, Text, Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { loginUser } from "../modules/fetch";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLogin, setIsLogin } = useAuth();
 
   return (
     <Flex
@@ -34,98 +13,65 @@ const Navbar = () => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding="1rem"
-      bg="teal.500"
-      color="white"
+      padding="1.5rem"
+      color="#6F4FD4"
+      boxShadow="lg"
+      mb={5}
     >
       <Link href="/">
-        <Flex align="center" mr={5} cursor="pointer">
-          <Text fontSize="xl" fontWeight="bold">
-            My Website
+        <Flex align="center" ml={5} cursor="pointer">
+          <Image
+            w={8}
+            mr={3}
+            src="https://www.nemaweb.org/images/library/reports-pubs-01.png"
+            alt=""
+          ></Image>
+          <Text fontSize="2xl" fontWeight="bold">
+            Library
           </Text>
         </Flex>
       </Link>
       <HStack>
-        {isLoggedIn && (
-          <Link href="/newbook">
-            <Button colorScheme="blackAlpha">Create New Book</Button>
+        {!isLogin && (
+          <Link href="/register">
+            <Button width="6rem" borderRadius="50" bgColor="white">
+              Register
+            </Button>
           </Link>
         )}
-        {!isLoggedIn ? (
-          <Button onClick={onOpen} colorScheme="blue">
-            Login
-          </Button>
-        ) : (
+        {!isLogin && (
+          <Link href="/login">
+            <Button
+              width="6rem"
+              borderRadius="50"
+              color="white"
+              bgColor="#6F4FD4"
+            >
+              Login
+            </Button>
+          </Link>
+        )}
+        {isLogin && (
+          <Link href="/newbook">
+            <Button bgColor="white" borderRadius={50}>
+              Create New Book
+            </Button>
+          </Link>
+        )}
+        {isLogin && (
           <Button
-            colorScheme="blue"
+            colorScheme="red"
+            borderRadius={50}
+            width="6rem"
             onClick={() => {
-              Cookies.remove("isLoggedIn");
-              setIsLoggedIn(false);
+              Cookies.remove("isLogin");
+              setIsLogin(false);
             }}
           >
             Logout
           </Button>
         )}
       </HStack>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <form
-          id="login-form"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            try {
-              await loginUser(e.target.email.value, e.target.password.value);
-              Cookies.set("isLoggedIn", true);
-              setIsLoggedIn(true);
-              onClose();
-            } catch (err) {
-              toast({
-                title: "Error",
-                description: err.message,
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-              });
-            }
-          }}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Login</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <VStack>
-                <FormControl isRequired>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email address"
-                  />
-                </FormControl>
-                <FormControl isRequired>
-                  <FormLabel>Password</FormLabel>
-                  <Input
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                  />
-                </FormControl>
-              </VStack>
-            </ModalBody>
-            <ModalFooter>
-              <Button type="submit" form="login-form" colorScheme="blue" mr={3}>
-                Login
-              </Button>
-              <Link href="/register" onClick={onClose}>
-                <Button variant="ghost">
-                  Doesn&apos;t Have Account? Click here
-                </Button>
-              </Link>
-            </ModalFooter>
-          </ModalContent>
-        </form>
-      </Modal>
     </Flex>
   );
 };

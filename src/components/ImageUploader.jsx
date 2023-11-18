@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
 export default function ImageUploader() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -6,9 +6,9 @@ export default function ImageUploader() {
 
   useEffect(() => {
     if (bookData?.image) {
-      const file = new File([], bookData.image, { type: 'image/*' });
+      const file = new File([], bookData.image, { type: "image/*" });
       setSelectedImage(URL.createObjectURL(file));
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   }, [bookData]);
 

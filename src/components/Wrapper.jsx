@@ -1,12 +1,14 @@
-import { VStack } from "@chakra-ui/react";
+import { Flex, HStack } from "@chakra-ui/react";
 import Navbar from "./Navbar";
 
 function Wrapper(props) {
   return (
-    <VStack minH="100vh" minW="100vw">
+    <>
       <Navbar />
-      {props.children}
-    </VStack>
+      <Flex justify="center" align="center">
+        <HStack>{props.children}</HStack>
+      </Flex>
+    </>
   );
 }
 

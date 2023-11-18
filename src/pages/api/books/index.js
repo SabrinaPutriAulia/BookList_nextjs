@@ -7,18 +7,18 @@ const storage = multer.diskStorage({
     cb(null, "./public/uploads/");
   },
   filename: (req, file, cb) => {
-    const fileName = Date.now() + "-" + file.originalname.toLowerCase().split(' ').join('-');
+    const fileName =
+      Date.now() + "-" + file.originalname.toLowerCase().split(" ").join("-");
     cb(null, fileName);
   },
 });
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10000000 },
+  limits: { fileSize: 10000000 }, // 10MB limit
 });
 
 export default async function handler(req, res) {
-
   try {
     switch (req.method) {
       case "POST":
@@ -79,4 +79,3 @@ export const config = {
     bodyParser: false, // Disallow body parsing, consume as stream
   },
 };
-
